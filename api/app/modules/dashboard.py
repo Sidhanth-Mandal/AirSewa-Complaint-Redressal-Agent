@@ -111,7 +111,7 @@ def summary(db, f: dict) -> dict:
     months = sorted(monthly)
     trend_monthly = []
     for i, m in enumerate(months):
-        prev = monthly[months[i - 1]][0] if i else None
+        prev = monthly[months[i - 1]][0] if i and monthly[months[i - 1]][0] >= 50 else None  # skip partial first month
         trend_monthly.append({"month": m, "tickets": monthly[m][0], "resolved": monthly[m][1], "breached": monthly[m][2],
                               "growth_pct": pct(monthly[m][0] - prev, prev) if prev else 0})
     # TAT distribution + early/within/delayed

@@ -1,0 +1,56 @@
+{
+  "common": {
+    "appName": "AirSewa 3.0", "tagline": "Air travel grievance redressal - Ministry of Civil Aviation / Airports Authority of India",
+    "login": "Login", "logout": "Logout", "register": "Register", "language": "Language", "home": "Home", "search": "Search", "submit": "Submit",
+    "cancel": "Cancel", "save": "Save", "loading": "Loading…", "view": "View", "back": "Back", "next": "Next", "close": "Close", "yes": "Yes", "no": "No",
+    "simulated": "Simulated", "skip": "Skip to main content", "prototype": "Prototype - all external systems are simulated", "hello": "Hello", "refresh": "Refresh",
+    "required": "Required", "all": "All", "status": "Status", "created": "Created", "actions": "Actions", "none": "Nothing here yet", "mine": "My tickets"
+  },
+  "nav": {
+    "passenger": "My grievances", "newGrievance": "File a grievance", "track": "Track flight / ticket", "queue": "My queue", "performance": "Performance",
+    "staff": "Staff accounts", "review": "Review queue", "allTickets": "All tickets", "closure": "Closure & committee", "channels": "Other channels", "social": "Live social feed",
+    "dashboard": "MoCA dashboard", "rules": "Allocation rules", "sla": "SLA & CAR", "watchlist": "Social watch list", "users": "Users & masters", "clock": "Demo clock",
+    "settings": "Settings", "audit": "Audit & notifications", "control": "Control room", "simulator": "Social simulator", "demo": "Live demo", "crm": "Airline CRM (sim)", "developer": "API sandbox"
+  },
+  "landing": {
+    "title": "File and track air travel grievances in one place",
+    "sub": "Flights, airports, baggage, refunds, wheelchair assistance. Your complaint is routed to the right airline, airport or authority and tracked until it is resolved.",
+    "file": "File a grievance", "trackTicket": "Track a grievance", "flight": "Track a flight (no login)", "portals": "Choose your portal",
+    "pPassenger": "Passenger", "pPassengerD": "Register, file, track, reopen and give feedback", "pRedressor": "Airline / Airport / Regulator", "pRedressorD": "Redressor staff and Nodal Officers",
+    "pAgent": "AirSewa Agent (PACR)", "pAgentD": "Review multi-channel and social complaints", "pAdmin": "MoCA / AAI Dashboard", "pAdminD": "KPIs, SLA, rules, watch list, reports", "pManager": "Control Room Manager", "pManagerD": "Productivity (PU) and SLA penalty simulation",
+    "pSim": "Social Simulator", "pSimD": "Fake X and Instagram apps (Simulated)", "pDemo": "Split-screen demo", "pDemoD": "Post on the left, watch PACR detect it on the right",
+    "demoNote": "Demo accounts and the OTP (123456) are listed in the README. No real SMS, e-mail or social platform is connected.",
+    "step1": "Describe the problem", "step2": "Auto-classified & routed", "step3": "Track, escalate, give feedback"
+  },
+  "auth": {
+    "loginTitle": "Login to AirSewa", "username": "Mobile number or e-mail", "password": "Password", "withPassword": "Password", "withOtp": "OTP", "guest": "Continue as guest",
+    "sendOtp": "Send OTP", "otp": "One-time password", "verify": "Verify & continue", "otpSent": "OTP sent (Simulated). Demo OTP: {otp}", "guestConsent": "Save my details and create an account for tracking later",
+    "guestNote": "Guest access needs only a mobile number or e-mail verified by OTP.", "forgot": "Forgot password?", "registerTitle": "Create your account", "name": "Full name",
+    "userType": "I am a", "countryCode": "Country code", "mobileOrEmail": "Mobile number or e-mail", "passwordHint": "At least 8 characters with upper-case, lower-case, digit and special character.",
+    "create": "Create account", "haveAccount": "Already registered?", "noAccount": "New user?", "staffNote": "Staff, agents and administrators sign in with their password.", "resetTitle": "Reset password", "newPassword": "New password", "resetDone": "Password updated. Please login."
+  },
+  "form": {
+    "title": "File a grievance", "subtitle": "Takes about two minutes. Fields marked * are mandatory.", "category": "Type of grievance",
+    "cat": { "flight": "Flight related (delay / cancellation / modification / baggage)", "airport": "Airport related (hygiene, charging points, facilities, security)", "ground": "On-ground (wheelchair, airport stores, taxi, meet & greet)", "govt": "Government department (Customs, Immigration, DGCA …)", "other": "Others" },
+    "contact": "Contact details", "name": "Your name", "mobile": "Mobile number", "email": "E-mail", "contactHint": "Mobile number or e-mail is required.", "description": "Describe your grievance",
+    "descHint": "Mention airline, flight number, airport and what happened. Urgent medical, medicine or exam-document cases are auto-prioritised.", "eventAt": "Date & time of the event", "airline": "Airline",
+    "srn": "Service Request Number", "pnr": "PNR", "flightNo": "Flight number", "airport": "Airport", "autoFetch": "Fetch flight & PNR", "attach": "Supporting documents", "attachHint": "PDF, JPG or PNG, up to 10 MB each",
+    "consent": "I have read the privacy notice and consent to AirSewa storing my contact information to process this grievance.", "submit": "Submit grievance", "tat": "Standard response time for this category: {h} hours", "tatCritical": "Critical (S1) cases: {h} hours",
+    "success": "Grievance registered", "yourId": "Your ticket ID", "routedTo": "Routed to", "priority": "Priority", "viewTicket": "View ticket", "another": "File another", "optional": "Optional - helps verify refund / compensation",
+    "ticketAmount": "Ticket amount paid (₹)", "blockTime": "Flight block time (hours)", "baggageKg": "Baggage weight (kg)", "loginFirst": "Please login or continue as guest to file a grievance."
+  },
+  "status": {
+    "Under Assessment": "Under Assessment", "Assigned": "Assigned", "In-Progress": "In-Progress", "On Hold - Awaiting Passenger Inputs": "On Hold - Awaiting passenger inputs",
+    "Provisionally Resolved": "Provisionally Resolved", "Resolved": "Resolved", "Reopened": "Reopened", "Escalated": "Escalated", "Closed": "Closed"
+  },
+  "ticket": {
+    "details": "Grievance details", "timeline": "Status timeline", "reopen": "Reopen", "escalate": "Escalate", "feedback": "Feedback", "dispute": "Dispute resolution", "provideInfo": "Provide requested information",
+    "rating": "How satisfied are you with the resolution?", "confirm": "I confirm the issue is resolved", "notSatisfied": "Not satisfied", "reopensLeft": "Reopens used: {n} of {max}", "reason": "Reason", "send": "Send",
+    "severityReason": "Why this priority", "assigned": "Assigned to", "level": "Escalation level", "sla": "SLA policy", "deadline": "Response deadline", "breached": "SLA breached", "notifications": "Notification log (Simulated SMS / e-mail)",
+    "attachments": "Attachments", "related": "Related posts / merged tickets", "closedNote": "Closed. Thank you for your feedback.", "holdNote": "The officer needs more information from you:", "resolvedNote": "The stakeholder marked this as resolved. Please confirm or reopen."
+  },
+  "track": {
+    "title": "Track a flight or grievance", "flightTitle": "Flight status (no login)", "flightNo": "Flight number (e.g. 6E 204)", "check": "Check status", "notify": "Notify me about this flight", "notifyContact": "Mobile or e-mail for updates",
+    "subscribed": "You will receive updates (Simulated - see Notification Log).", "ticketTitle": "Grievance status", "ticketId": "Ticket ID", "mobile4": "Last 4 digits of registered mobile", "gate": "Gate", "eta": "Estimated arrival"
+  }
+}

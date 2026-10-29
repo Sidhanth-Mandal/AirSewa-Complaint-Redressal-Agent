@@ -313,3 +313,22 @@ def test_channel_ingest_and_cross_channel_dedup(client, agent):
     r2 = agent.post("/channels/email", json={"sender": "rohan@mail.demo", "subject": "Refund", "text": "Refund not received for cancelled flight AI 101, PNR AB12CD, please help"})
     assert r2.json()["status"] == "grouped" and "PNR" in r2.json()["dup_reason"]
 
+
+
+def test_api_key_auth_and_rate_limit(client, admin, pax):
+    assert client.get("/v1/stats").status_code == 401
+    key = admin.post("/admin/api-keys", json={"name": "test"}).json()["key"]
+    t = file_ticket(pax, client, description="IndiGo flight delayed by many hours, need assistance now", service_request_no=srn())
+    r = client.get(f"/v1/tickets/{t['ticket_no']}", headers={"X-API-Key": key})
+    assert r.status_code == 200 and r.json()["sandbox"] is True
+    codes = [client.get("/v1/stats", headers={"X-API-Key": key}).status_code for _ in range(32)]
+    assert 429 in codes
+
+
+def test_bulk_escalate_and_search_by_contact(client, pax, agent):
+    t = file_ticket(pax, client, description="IndiGo flight delayed by many hours, bulk test case", service_request_no=srn())
+    ids = [agent.get(f"/tickets?q={t['ticket_no']}").json()["items"][0]["id"]]
+    assert agent.post("/tickets/bulk", json={"ids": ids, "action": "escalate", "note": "triage"}).json()["updated"] == 1
+    d = agent.get(f"/tickets/{t['ticket_no']}").json()
+    assert d["level"] == 2 and d["status"] == "Escalated"
+    assert agent.get("/tickets?q=9876543210").json()["total"] >= 1                                      # search by contact

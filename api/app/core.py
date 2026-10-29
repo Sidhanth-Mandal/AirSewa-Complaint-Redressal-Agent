@@ -93,7 +93,7 @@ class Bus:
 
     def subscribe(self, topics: set):
         q: asyncio.Queue = asyncio.Queue(maxsize=500)
-        entry = (q, asyncio.get_running_loop(), topics)
+        entry = (q, asyncio.get_running_loop(), frozenset(topics))
         with self.lock:
             self.subs.add(entry)
         return entry

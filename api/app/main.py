@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .core import Base, SessionLocal, clock, engine
 from .models import Config
-from .routers import admin, analytics, auth, misc, social_api, tickets
+from .routers import admin, analytics, auth, misc, social_api, tickets, v1
 from .modules import sla
 
 
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="AirSewa 3.0 + PACR Prototype API", version="1.0",
               description="Prototype only. All social platforms, telephony, SMS/e-mail, flight data and CRMs are SIMULATED behind adapters.", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
-for r in (auth.router, tickets.router, admin.router, analytics.router, social_api.router, misc.router):
+for r in (auth.router, tickets.router, admin.router, analytics.router, social_api.router, misc.router, v1.router):
     app.include_router(r)
 
 

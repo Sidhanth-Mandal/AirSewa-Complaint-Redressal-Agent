@@ -49,6 +49,22 @@ def sla_tat(pols, category):
     return {"standard_h": best.e1_hours if best else 24, "critical_h": crit[0].e1_hours if crit else 4}
 
 
+class PreviewIn(BaseModel):
+    text: str
+    category: str | None = None
+
+
+@router.post("/tickets/preview")
+def preview(b: PreviewIn, db: Session = Depends(get_db)):
+    """Live hint while typing: detected critical keywords + applicable TAT (FRS 3.2 #14, #17, 3.3 #7)."""
+    from ..modules import allocation
+    lang = registry.translator.detect(b.text)
+    c = allocation.classify(registry.translator.translate(b.text, lang), allocation.load_ruleset(db), forced_category=b.category if b.category in R.CATEGORIES else None)
+    p = G.pick_policy(db, c.category, c.severity)
+    return {"severity": c.severity, "severity_reason": c.severity_reason, "category": c.category, "subcategory": c.subcategory, "lang": lang,
+            "tat_hours": p.e1_hours if p else None, "critical": c.severity == 1}
+
+
 @router.get("/booking/lookup")
 def booking_lookup(airline: str, srn: str):
     """Mock airline booking lookup: auto-fetch flight number and PNR from airline + Service Request Number (FRS 3.2 #9)."""
@@ -153,7 +169,8 @@ def list_tickets(q: str | None = None, status: str | None = None, category: str 
     qq = G.visible_query(db, u)
     if q:
         like = f"%{q}%"
-        qq = qq.filter(or_(Ticket.ticket_no.ilike(like), Ticket.description.ilike(like), Ticket.pnr.ilike(like), Ticket.flight_no.ilike(like)))
+        qq = qq.filter(or_(Ticket.ticket_no.ilike(like), Ticket.description.ilike(like), Ticket.pnr.ilike(like), Ticket.flight_no.ilike(like),
+                           Ticket.service_request_no.ilike(like), Ticket.contact_mobile.ilike(like), Ticket.contact_email.ilike(like)))
     if status == "open":
         qq = qq.filter(Ticket.status.in_(R.OPEN_STATUSES))
     elif status:
@@ -389,9 +406,18 @@ def action(ref: str, b: ActionIn, u: User = Depends(current_user), db: Session =
         G.add_event(db, t, G.actor_name(u), "passenger", "escalation", f"Passenger escalated to {sla.LEVEL_NAME[t.level]}: {note}", frm, "Escalated")
         G.on_status_changed(db, t, frm, "Escalated")
     # ---------------- agent
+    elif u.role in ("agent", "admin") and a == "escalate":
+        if t.level >= 4:
+            raise HTTPException(409, "Already at Nodal level")
+        t.level += 1
+        t.escalation_count += 1
+        nu = G.assign_user(db, t.assigned_org_id, t.level)
+        t.assigned_user_id = nu.id if nu else None
+        frm = t.status
+        t.status = "Escalated"
+        G.add_event(db, t, G.actor_name(u), u.role, "escalation", f"Escalated by {u.role} to {sla.LEVEL_NAME[t.level]} on triage: {note}", frm, "Escalated")
+        G.on_status_changed(db, t, frm, "Escalated")
     elif u.role in ("agent", "admin") and a == "reclassify":
-        if u.role != "agent":
-            raise HTTPException(403, "Only AirSewa Agents can override classification")
         ch = []
         if b.category and b.category != t.category:
             if b.category not in R.CATEGORIES:
@@ -418,7 +444,7 @@ def action(ref: str, b: ActionIn, u: User = Depends(current_user), db: Session =
             raise HTTPException(409, "No change")
         G.add_event(db, t, G.actor_name(u), "agent", "override", "; ".join(ch) + f". {note}")
         db.query(Ticket).filter(Ticket.id == t.id).update({})
-    elif u.role == "agent" and a == "merge":
+    elif u.role in ("agent", "admin") and a == "merge":
         parent = _ticket(db, b.parent_ref or "")
         if parent.id == t.id:
             raise HTTPException(422, "Cannot merge a ticket into itself")
@@ -452,7 +478,7 @@ class BulkIn(BaseModel):
 
 
 @router.post("/tickets/bulk")
-def bulk(b: BulkIn, u: User = Depends(require("agent")), db: Session = Depends(get_db)):
+def bulk(b: BulkIn, u: User = Depends(require("agent", "admin")), db: Session = Depends(get_db)):
     ts = db.query(Ticket).filter(Ticket.id.in_(b.ids[:500])).all()
     n = 0
     for t in ts:
@@ -467,6 +493,13 @@ def bulk(b: BulkIn, u: User = Depends(require("agent")), db: Session = Depends(g
             nu = G.assign_user(db, o.id, t.level)
             t.assigned_user_id = nu.id if nu else None
             G.add_event(db, t, G.actor_name(u), "agent", "override", f"[bulk] assigned to {o.name}. {b.note}")
+        elif b.action == "escalate" and t.level < 4 and t.status in R.OPEN_STATUSES:
+            t.level += 1
+            t.escalation_count += 1
+            nu = G.assign_user(db, t.assigned_org_id, t.level)
+            t.assigned_user_id = nu.id if nu else None
+            frm, t.status = t.status, "Escalated"
+            G.add_event(db, t, G.actor_name(u), u.role, "escalation", f"[bulk] escalated to {sla.LEVEL_NAME[t.level]}. {b.note}", frm, "Escalated")
         elif b.action == "note":
             G.add_event(db, t, G.actor_name(u), "agent", "comment", f"[bulk] {b.note}")
         else:

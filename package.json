@@ -1,0 +1,14 @@
+{
+  "name": "airsewa-prototype",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AirSewa 3.0 + PACR prototype (all external systems simulated)",
+  "scripts": {
+    "setup": "node scripts/dev.mjs --setup-only",
+    "dev": "node scripts/dev.mjs",
+    "seed": "node scripts/dev.mjs --seed-only",
+    "test": "node scripts/dev.mjs --test",
+    "build": "npm --prefix web run build"
+  },
+  "engines": { "node": ">=20" }
+}

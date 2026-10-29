@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+html { font-size: 17px; }
+body { @apply bg-slate-50 text-slate-900 antialiased; }
+:focus-visible { @apply outline-none ring-2 ring-offset-2 ring-navy; }
+.skip-link { @apply absolute left-2 -top-20 z-50 bg-white text-navy px-3 py-2 rounded; }
+.skip-link:focus { @apply top-2; }
+.tricolor { background: linear-gradient(90deg, #ff9933 0 33.3%, #fff 33.3% 66.6%, #138808 66.6%); height: 5px; }
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

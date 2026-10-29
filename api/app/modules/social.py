@@ -111,7 +111,8 @@ def find_duplicate(db, ctx: dict, cls, ent: dict, now):
             reason, score = "Same Service Request Number", 1.0
         elif ent.get("flight_no") and ce.get("flight_no") == ent["flight_no"] and c.category == cls.category:
             reason, score = f"Same flight {ent['flight_no']} within window", 0.9
-        elif ctx.get("author_handle") and c.author_handle == ctx["author_handle"] and c.category == cls.category and (now - c.created_at) < timedelta(hours=12):
+        elif (ctx.get("author_handle") and c.author_handle == ctx["author_handle"] and c.subcategory == cls.subcategory
+              and (now - c.created_at) < timedelta(hours=6) and jaccard(ctx["text_en"], c.text_en or "") >= 0.25):
             reason, score = "Same author, same issue (follow-up / repeat post)", 0.8
         else:
             sim = jaccard(ctx["text_en"], c.text_en or "")
