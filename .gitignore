@@ -1,11 +1,34 @@
+# Dependencies
 node_modules/
-.next/
 .venv/
-__pycache__/
-*.pyc
-.env
-*.db
-uploads/
-.pytest_cache/
+venv/
+
+# Build output
+.next/
+out/
+dist/
+build/
 *.tsbuildinfo
 
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets (never commit)
+.env
+.env.*
+!.env.example
+api/.jwt_secret
+
+# SQLite transient files only (airsewa.db itself IS tracked, it holds the data)
+*.db-wal
+*.db-shm
+
+# Logs / OS / editor
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
